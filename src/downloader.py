@@ -9,7 +9,7 @@ import logging
 from argparse import ArgumentParser
 import requests
 from tqdm import tqdm
-import pattern
+from . import pattern
 
 __author__ = "Benno Bielmeier"
 __status__ = "instable"
