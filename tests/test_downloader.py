@@ -1,6 +1,6 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
-from src.downloader import *
+from src.downloader import ZoomDownloader
 
 
 class TestZoomDownloader:
