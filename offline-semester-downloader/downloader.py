@@ -4,15 +4,9 @@ import getpass
 import re as regex
 import os.path
 import logging
-from argparse import ArgumentParser
 import requests
 from tqdm import tqdm
 from . import pattern
-
-__author__ = "Benno Bielmeier"
-__status__ = "instable"
-__date__ = "2020-05-03"
-__version__ = "0.1"
 
 
 class GripsDownloader:
@@ -218,23 +212,3 @@ def download(url: str, path: str):
 _zoom_matcher = regex.compile(pattern.DOMAIN_ZOOM)
 _grips_matcher = regex.compile(pattern.DOMAIN_GRIPS)
 _vimp_matcher = regex.compile(pattern.DOMAIN_VIMP)
-
-
-def main():
-    '''Main function'''
-    parser = ArgumentParser(description="Offline Semester Downloader.")
-    parser.add_argument('-v', '--version', action='version',
-                        version='{author}\'s %(prog)s v{version}'.format(
-                            author=__author__, version=__version__))
-    parser.add_argument("url", help="url of vimp or zoom cloud", type=str)
-    parser.add_argument('path', help="destination path", type=str)
-    args = parser.parse_args()
-
-    logging.basicConfig(
-        format='[%(levelname).1s] %(message)s', level=logging.DEBUG)
-
-    download(args.url, args.path)
-
-
-if __name__ == '__main__':
-    main()
