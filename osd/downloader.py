@@ -16,17 +16,17 @@ class Downloader:
 
 
 class _GripsDownloader(Downloader):
-    '''
+    """
     Downloader instance that is capable of finding the video destination urls
     of a given course.
-    '''
+    """
 
-    _DOMAIN = 'elearning.uni-regensburg.de'
+    _DOMAIN = "elearning.uni-regensburg.de"
     _URL = f"https://{_DOMAIN}"
-    _COURSE_URL = 'https://elearning.uni-regensburg.de/mod/url/view.php?id={}'
+    _COURSE_URL = "https://elearning.uni-regensburg.de/mod/url/view.php?id={}"
 
     def __init__(self):
-        self.login_failed_pattern = regex.compile(r'Sie sich anmelden')
+        self.login_failed_pattern = regex.compile(r"Sie sich anmelden")
         self.session = requests.Session()
         self._login()
         self._test()
@@ -35,15 +35,15 @@ class _GripsDownloader(Downloader):
         self._logout()
 
     def _logout(self):
-        '''Logout and end session.'''
+        """Logout and end session."""
         logging.info("Logout")
-        response = self.session.post(self._URL + '/login/logout.php')
+        response = self.session.post(self._URL + "/login/logout.php")
         assert response.status_code == requests.codes.ok
         # TODO: remove cookie
 
     def _login(self, user: str = None, password: str = None) -> bool:
         if not user:
-            user = input('User: ')
+            user = input("User: ")
         assert _Validator.validate_user(user)
 
         if not password:
@@ -53,7 +53,8 @@ class _GripsDownloader(Downloader):
 
         response = self.session.post(
             self._URL,
-            data=dict(realm='hs', username=user, password=password, anchor=''))
+            data=dict(realm="hs", username=user, password=password, anchor=""),
+        )
 
         assert response.status_code == requests.codes.ok
         assert self.session.cookies.get_dict(domain=self._DOMAIN)
@@ -84,7 +85,8 @@ class _GripsDownloader(Downloader):
         self._test(response.text)
 
         matches = regex.findall(
-            pattern.SRC_URL_VIMP, str(response.text), regex.I)
+            pattern.SRC_URL_VIMP, str(response.text), regex.I
+        )
         return matches[0]
 
     def find_vimp_link_by_id(self, course_id: int) -> str:
@@ -93,7 +95,6 @@ class _GripsDownloader(Downloader):
 
 
 class _VimpDownloader:
-
     def __init__(self):
         pass
 
@@ -103,7 +104,7 @@ class _VimpDownloader:
 
 class _ZoomDownloader:
 
-    _HEADER = {'Referer': 'https://oth-regensburg.zoom.us'}
+    _HEADER = {"Referer": "https://oth-regensburg.zoom.us"}
 
     def __init__(self):
         self.cookie = None
@@ -119,7 +120,7 @@ class _ZoomDownloader:
             logging.debug("Set required cookie")
             cookie_values = response.cookies.get_dict()
             assert cookie_values
-            self.cookie = dict(_zm_ssid=cookie_values['_zm_ssid'])
+            self.cookie = dict(_zm_ssid=cookie_values["_zm_ssid"])
 
         logging.info("Searching video source url")
         match = regex.search(pattern.SRC_URL_ZOOM, response.text)
@@ -134,17 +135,19 @@ class _ZoomDownloader:
 
     def _download_file(self, url: str, path: str):
         with requests.get(
-                url, cookies=self.cookie, headers=self._HEADER, stream=True
-                ) as response:
+            url, cookies=self.cookie, headers=self._HEADER, stream=True
+        ) as response:
             if response.status_code == requests.codes.ok:
-                total_size = int(response.headers.get('content-length', 0))
+                total_size = int(response.headers.get("content-length", 0))
                 progress_bar = tqdm(
-                    total=total_size, unit='iB', unit_scale=True)
+                    total=total_size, unit="iB", unit_scale=True
+                )
 
                 response.raise_for_status()
-                with open(path, 'wb') as video_file:
+                with open(path, "wb") as video_file:
                     for chunk in response.iter_content(
-                            chunk_size=self._chunk_size):
+                        chunk_size=self._chunk_size
+                    ):
                         progress_bar.update(len(chunk))
                         video_file.write(chunk)
                 logging.debug("Successfully safed to %s", path)
@@ -160,49 +163,49 @@ class _ZoomDownloader:
 
 
 class _Validator:
-    ''''Provides methods to verify certain string formats.'''
+    """'Provides methods to verify certain string formats."""
 
     _url = regex.compile(pattern.URL_BASIC)
     _user = regex.compile(pattern.GRIPS_USER)
 
     @classmethod
     def validate_url(cls, url: str) -> bool:
-        '''Validates validity of given url.
+        """Validates validity of given url.
 
         :param url: given url
         :type url: str
         :return: `True` if URL is valid; otherwise `False`
         :rtype: bool
-        '''
+        """
         return cls._url.match(url)
 
     @classmethod
     def validate_user(cls, user: str) -> bool:
-        '''Validates validity of given GRIPS username.
+        """Validates validity of given GRIPS username.
 
         :param user: the username
         :types user: str
         :return: `True` if URL is valid; otherwise `False`
         :rtype: bool
-        '''
+        """
         return cls._user.match(user)
 
     @classmethod
     def validate_video_path(cls, path: str) -> bool:
-        assert os.path.basename(path).endswith('.mp4')
+        assert os.path.basename(path).endswith(".mp4")
         assert os.path.isdir(os.path.dirname(path))
         if os.path.isfile(path):
             logging.warning("file '%s' already existent.", path)
 
 
 def download(url: str, path: str):
-    '''Downloads the video lecture of a given page.
+    """Downloads the video lecture of a given page.
 
     :param url: The url of the page in which the video is embedded.
     :type url: str
     :param path: The destination path to safe the video.
     :type path: str
-    '''
+    """
     if _zoom_matcher.match(url):
         zoom_d = _ZoomDownloader()
         zoom_d.download(url, path)

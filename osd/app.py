@@ -23,14 +23,15 @@ from . import downloader
 def setup_logging():
     """Configure logging."""
     logging.basicConfig(
-        format='[%(levelname).1s] %(message)s', level=logging.DEBUG)
+        format="[%(levelname).1s] %(message)s", level=logging.DEBUG
+    )
 
 
 def run(url: str, path: str):
-    '''Main function
+    """Main function
 
     - set up logging
-    '''
+    """
     setup_logging()
     downloader.download(url, path)
 
