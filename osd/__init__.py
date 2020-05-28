@@ -4,8 +4,8 @@
 # Keep these metadata assignments simple and single-line. They are parsed
 # somewhat naively by setup.py and the Windows installer generation script.
 
-__title__ = "OSD - Offline Semester Downloader"
-__description__ = ""
+__title__ = "osd"
+__description__ = "OSD - Offline Semester Downloader"
 
 __version__ = "0.1"
 
