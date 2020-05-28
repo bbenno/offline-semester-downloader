@@ -9,9 +9,15 @@ from tqdm import tqdm
 from . import pattern
 
 
-class GripsDownloader:
+class Downloader:
+    @classmethod
+    def _domain_to_url(domain: str) -> str:
+        return f"https://{domain}"
+
+
+class _GripsDownloader(Downloader):
     '''
-    Downloder instace that is capable of finding the video destination urls
+    Downloader instance that is capable of finding the video destination urls
     of a given course.
     '''
 
@@ -38,7 +44,7 @@ class GripsDownloader:
     def _login(self, user: str = None, password: str = None) -> bool:
         if not user:
             user = input('User: ')
-        assert Validator.validate_user(user)
+        assert _Validator.validate_user(user)
 
         if not password:
             password = getpass.getpass()
@@ -86,7 +92,7 @@ class GripsDownloader:
         self.find_vimp_link(self._COURSE_URL.format(course_id))
 
 
-class VimpDownloader:
+class _VimpDownloader:
 
     def __init__(self):
         pass
@@ -95,7 +101,7 @@ class VimpDownloader:
         pass
 
 
-class ZoomDownloader:
+class _ZoomDownloader:
 
     _HEADER = {'Referer': 'https://oth-regensburg.zoom.us'}
 
@@ -104,7 +110,7 @@ class ZoomDownloader:
         self._chunk_size = 8192
 
     def _find_mp4_url(self, url: str) -> str:
-        assert Validator.validate_url(url)
+        assert _Validator.validate_url(url)
 
         response = requests.get(url)
         response.raise_for_status()
@@ -146,14 +152,14 @@ class ZoomDownloader:
                 logging.error("Received HTTP Status %d", response.status_code)
 
     def download(self, url: str, path: str):
-        assert Validator.validate_url(url)
+        assert _Validator.validate_url(url)
         # validate path
 
         video_url = self._find_mp4_url(url)
         self._download_file(video_url, path)
 
 
-class Validator:
+class _Validator:
     ''''Provides methods to verify certain string formats.'''
 
     _url = regex.compile(pattern.URL_BASIC)
@@ -198,13 +204,13 @@ def download(url: str, path: str):
     :type path: str
     '''
     if _zoom_matcher.match(url):
-        zoom_d = ZoomDownloader()
+        zoom_d = _ZoomDownloader()
         zoom_d.download(url, path)
     elif _vimp_matcher.match(url):
         pass
     elif _grips_matcher.match(url):
-        grips_d = GripsDownloader()
-        vimp = grips_d.find_vimp_link(url)
+        grips_d = _GripsDownloader()
+        p = grips_d.find_vimp_link(url)
     else:
         logging.critical("Can not parse url '%s'", url)
 

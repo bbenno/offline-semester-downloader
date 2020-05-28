@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-'''Regular expression patterns used by downloader'''
+'''Regular expression patterns used by downloaders.'''
 
 SRC_URL_VIMP = (r'(?<=src=")(https?:\/\/)?vimp\.(oth-regensburg|othr)\.de'
                 r'(/[\w_\-]*)*(?=(\?[^"]*?)?")')
