@@ -1,11 +1,15 @@
 SRC_DIR = osd
 DOC_DIR = docs
+TST_DIR = tests
+
+BLACK = black -l 79
 
 init: 
+	@echo "\nInstalling requirements..."
 	pip3 install -r requirements.txt
 
 test: clean
-	pytest --random-order
+	pytest
 
 coverage: clean
 	#pytest --random-order --cov-config .coveragerc --cov-report term-missing --cov=...
@@ -15,9 +19,9 @@ flake8:
 
 tidy: clean
 	@echo "\nTidying code with black..."
-	black -l 79 offline-semester-downloader
-	black -l 79 tests
-	black -l 79 setup.py
+	$(BLACK) $(SRC_DIR)
+	$(BLACK) $(TST_DIR)
+	$(BLACK) setup.py
 
 check: clean tidy flake8
 	pycodestyle $(SRC_DIR)/*.py
