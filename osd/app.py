@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 import logging
+import os.path
 from . import downloader
 
 
@@ -32,8 +33,21 @@ def run(url: str, path: str):
 
     - set up logging
     """
+    assert url and path
+
     setup_logging()
+    _validate_path(path)
+    exit()
     downloader.download(url, path)
+
+
+def _validate_path(path: str):
+    dirname, filename = os.path.split(path)
+    if len(dirname) == 0:
+        dirname = os.path.curdir
+    if filename:
+        logging.info("choosing '%s' as filename", filename)
+        pass
 
 
 def debug():
