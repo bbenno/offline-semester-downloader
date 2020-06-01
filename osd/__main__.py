@@ -19,16 +19,16 @@ def main():
         "--urls",
         required=True,
         metavar="url",
-        help="url of vimp or zoom cloud",
+        help="video source urls",
         nargs="+",
-        type=str,
+        type=str
     )
     parser.add_argument(
-        "-l", "--log", help="log level", type=int, action="count", default=0
+        "-l", "--log", help="log level", action="count", default=0
     )
     parser.add_argument("path", help="destination path", type=str)
     args = parser.parse_args()
-    app.run(args.url, args.path)
+    app.run(args.urls, args.path)
 
 
 if __name__ == "__main__":
