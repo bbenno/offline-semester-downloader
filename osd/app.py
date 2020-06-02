@@ -23,6 +23,7 @@ from . import downloader
 
 _expected_ext = "mp4"
 
+
 def setup_logging():
     """Configure logging."""
     logging.basicConfig(
@@ -50,6 +51,7 @@ def run(urls: str, path: str, verbose_mode: bool = False):
         if not verbose_mode:
             downloader.download(url, filename)
 
+
 def _filename_generator(path: str) -> str:
     """Generate valid, unique filenames with consistent file extension.
 
@@ -67,7 +69,7 @@ def _filename_generator(path: str) -> str:
         filepath = os.path.join(filepath, "out_")
         ext = "mp4"
     while True:
-        yield (filepath +  f"{count}" + ext)
+        yield (filepath + f"{count}" + ext)
         count += 1
 
 

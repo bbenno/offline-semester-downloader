@@ -19,14 +19,16 @@ def main():
         required=True,
         help="video source urls",
         nargs="+",
-        type=str
+        type=str,
     )
     parser.add_argument(
         "-l", "--log", help="log level", action="count", default=0
     )
     parser.add_argument(
-        "-v", "--verbose", help="explain what is being done",
-        action="store_true"
+        "-v",
+        "--verbose",
+        help="explain what is being done",
+        action="store_true",
     )
     parser.add_argument("path", help="destination path", type=str)
     args = parser.parse_args()
