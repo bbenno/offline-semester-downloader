@@ -213,7 +213,7 @@ def download(url: str, path: str):
         pass
     elif _grips_matcher.match(url):
         grips_d = _GripsDownloader()
-        p = grips_d.find_vimp_link(url)
+        grips_d.find_vimp_link(url)
     else:
         logging.critical("Can not parse url '%s'", url)
 
