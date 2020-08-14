@@ -2,6 +2,8 @@ SRC_DIR = osd
 DOC_DIR = docs
 TST_DIR = tests
 
+ALL_PY = **/*.py
+
 BLACK = black -l 79
 
 init: 
@@ -25,7 +27,7 @@ tidy: clean
 
 check: clean tidy flake8
 	pycodestyle $(SRC_DIR)/*.py
-	pylint --persistent=n -E -s n **/*.py
+	pylint --persistent=n -E -s n $(ALL_PY)
 
 debug: 
 	pylint -r y --persistent=n
