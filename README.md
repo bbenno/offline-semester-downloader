@@ -1,4 +1,5 @@
-![Status](https://github.com/bbenno/offline-semester/workflows/Python%20application/badge.svg?branch=master)
+![Test](https://github.com/bbenno/offline-semester-downloader/workflows/Python%20tester/badge.svg)
+![Style Check](https://github.com/bbenno/offline-semester-downloader/workflows/Python%20style%20checker/badge.svg)
 
 # OSD - Offline Semester Downloader
 
