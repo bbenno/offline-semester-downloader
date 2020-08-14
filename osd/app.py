@@ -17,22 +17,60 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 import logging
+import os.path
 from . import downloader
+
+
+_expected_ext = "mp4"
 
 
 def setup_logging():
     """Configure logging."""
     logging.basicConfig(
-        format='[%(levelname).1s] %(message)s', level=logging.DEBUG)
+        format="[%(levelname).1s] %(message)s", level=logging.DEBUG
+    )
 
 
-def run(url: str, path: str):
-    '''Main function
+def run(urls: str, path: str, verbose_mode: bool = False):
+    """Main function
 
     - set up logging
-    '''
+    """
+    assert urls and path
+    ext = os.path.splitext(path)[1].strip()
+    if ext and ext != _expected_ext:
+        logging.warn("Expected the file extension to be '%s'", _expected_ext)
+
     setup_logging()
-    downloader.download(url, path)
+
+    generator = _filename_generator(path)
+
+    for url in urls:
+        filename = next(generator)
+        logging.debug("Download to '%s' from '%s'", filename, url)
+        if not verbose_mode:
+            downloader.download(url, filename)
+
+
+def _filename_generator(path: str) -> str:
+    """Generate valid, unique filenames with consistent file extension.
+
+    :param path: The directory or file path where giving the pattern for
+    generated filepaths
+    :type path: str
+
+    :return: valid, unique filename
+    :rtype: str
+    """
+    count = 0
+    filepath, ext = os.path.splitext(path)
+    dirname, filename = os.path.split(path)
+    if not filename.strip():
+        filepath = os.path.join(filepath, "out_")
+        ext = "mp4"
+    while True:
+        yield (filepath + f"{count}" + ext)
+        count += 1
 
 
 def debug():

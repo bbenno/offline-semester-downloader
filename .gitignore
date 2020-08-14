@@ -3,5 +3,8 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+*.swp
+tests/**/.env
+
 build/
 _build/
